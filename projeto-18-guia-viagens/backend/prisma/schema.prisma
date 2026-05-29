@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExperienceType {
+  atividade
+  restaurante
+  outro
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(100)
+  email        String        @unique @db.VarChar(150)
+  passwordHash String        @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  destinations Destination[]
+
+  @@map("users")
+}
+
+model Destination {
+  id          Int          @id @default(autoincrement())
+  userId      Int          @map("user_id")
+  country     String       @db.VarChar(100)
+  city        String       @db.VarChar(100)
+  visitDate   DateTime     @map("visit_date") @db.Date
+  description String?
+  rating      Int?
+  isPublic    Boolean      @default(false) @map("is_public")
+  latitude    Decimal?     @db.Decimal(10, 7)
+  longitude   Decimal?     @db.Decimal(10, 7)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @default(now()) @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos      Photo[]
+  experiences Experience[]
+
+  @@index([userId], map: "idx_destinations_user")
+  @@index([isPublic], map: "idx_destinations_public")
+  @@map("destinations")
+}
+
+model Photo {
+  id            Int         @id @default(autoincrement())
+  destinationId Int         @map("destination_id")
+  filename      String      @db.VarChar(255)
+  originalName  String?     @map("original_name") @db.VarChar(255)
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@index([destinationId], map: "idx_photos_destination")
+  @@map("photos")
+}
+
+model Experience {
+  id            Int            @id @default(autoincrement())
+  destinationId Int            @map("destination_id")
+  title         String         @db.VarChar(200)
+  type          ExperienceType
+  description   String?
+  rating        Int?
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  destination   Destination    @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@index([destinationId], map: "idx_experiences_destination")
+  @@map("experiences")
+}
+
