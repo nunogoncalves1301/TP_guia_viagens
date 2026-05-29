@@ -1,8 +1,14 @@
+const fs = require("fs");
 const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, ".env") });
+
+const envPath = path.resolve(__dirname, ".env");
+const rootEnvPath = path.resolve(__dirname, "..", ".env");
+const finalEnvPath = fs.existsSync(envPath) ? envPath : rootEnvPath;
+
+require("dotenv").config({ path: finalEnvPath });
 
 if (!process.env.JWT_SECRET) {
-  console.error("JWT_SECRET não está definido. Verifique o ficheiro backend/.env.");
+  console.error("JWT_SECRET não está definido. Verifique o ficheiro backend/.env ou a .env na raiz do projeto.");
   process.exit(1);
 }
 
