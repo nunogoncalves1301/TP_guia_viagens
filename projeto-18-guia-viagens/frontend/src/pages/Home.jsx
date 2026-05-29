@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../api";
 import MapView from "../components/MapView";
 import DestinationCard from "../components/DestinationCard";
+import ScrollReveal from "../components/animations/ScrollReveal";
 
 export default function Home() {
   const [destinations, setDestinations] = useState([]);
@@ -57,29 +58,33 @@ export default function Home() {
       </section>
 
       {destinations.length > 0 && (
-        <section className="section">
-          <h2>Mapa das tuas viagens</h2>
-          <MapView destinations={destinations} height="360px" />
-        </section>
+        <ScrollReveal delay={0.2}>
+          <section className="section">
+            <h2>Mapa das tuas viagens</h2>
+            <MapView destinations={destinations} height="360px" />
+          </section>
+        </ScrollReveal>
       )}
 
-      <section className="section">
-        <div className="section-header">
-          <h2>Destinos recentes</h2>
-          <Link to="/destinos">Ver todos →</Link>
-        </div>
-        {recent.length === 0 ? (
-          <p className="empty-msg">
-            Ainda não tens destinos. <Link to="/destinos/novo">Adiciona o primeiro</Link>!
-          </p>
-        ) : (
-          <div className="card-grid">
-            {recent.map((d) => (
-              <DestinationCard key={d.id} destination={d} />
-            ))}
+      <ScrollReveal delay={0.3}>
+        <section className="section">
+          <div className="section-header">
+            <h2>Destinos recentes</h2>
+            <Link to="/destinos">Ver todos →</Link>
           </div>
-        )}
-      </section>
+          {recent.length === 0 ? (
+            <p className="empty-msg">
+              Ainda não tens destinos. <Link to="/destinos/novo">Adiciona o primeiro</Link>!
+            </p>
+          ) : (
+            <div className="card-grid">
+              {recent.map((d, i) => (
+                <DestinationCard key={d.id} destination={d} delay={i * 0.1} />
+              ))}
+            </div>
+          )}
+        </section>
+      </ScrollReveal>
     </div>
   );
 }

@@ -34,8 +34,8 @@ export default function Feed() {
         </div>
       ) : (
         <div className="card-grid">
-          {items.map((d) => (
-            <DestinationCard key={d.id} destination={d} linkPrefix="/feed" />
+          {items.map((d, i) => (
+            <DestinationCard key={d.id} destination={d} linkPrefix="/feed" delay={i * 0.08} />
           ))}
         </div>
       )}

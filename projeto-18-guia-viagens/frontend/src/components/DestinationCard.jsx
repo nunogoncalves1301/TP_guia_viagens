@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import StarRating from "./StarRating";
+import ScrollReveal from "./animations/ScrollReveal";
 
-export default function DestinationCard({ destination, linkPrefix = "/destinos" }) {
+export default function DestinationCard({ destination, linkPrefix = "/destinos", delay = 0 }) {
   const date = new Date(destination.visit_date).toLocaleDateString("pt-PT", {
     year: "numeric",
     month: "long",
   });
 
   return (
-    <article className="dest-card">
+    <ScrollReveal delay={delay} duration={0.5}>
+      <article className="dest-card">
       <div className="dest-card-header">
         <h3>
           {destination.city}, <em>{destination.country}</em>
@@ -38,6 +40,7 @@ export default function DestinationCard({ destination, linkPrefix = "/destinos" 
       <Link to={`${linkPrefix}/${destination.id}`} className="btn btn-sm">
         Ver detalhes →
       </Link>
-    </article>
+      </article>
+    </ScrollReveal>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import ScrollReveal from "../components/animations/ScrollReveal";
 
 export default function Stats() {
   const [stats, setStats] = useState(null);
@@ -19,30 +20,33 @@ export default function Stats() {
         </div>
       </div>
 
-      <div className="stats-grid">
-        <div className="stat-card large">
-          <span className="stat-number">{stats.totalDestinations}</span>
-          <span className="stat-label">Destinos visitados</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-number">{stats.totalCountries}</span>
-          <span className="stat-label">Países</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-number">{stats.totalContinents}</span>
-          <span className="stat-label">Continentes</span>
-        </div>
-        {stats.averageRating && (
-          <div className="stat-card">
-            <span className="stat-number">★ {stats.averageRating}</span>
-            <span className="stat-label">Classificação média</span>
+      <ScrollReveal delay={0.1}>
+        <div className="stats-grid">
+          <div className="stat-card large">
+            <span className="stat-number">{stats.totalDestinations}</span>
+            <span className="stat-label">Destinos visitados</span>
           </div>
-        )}
-      </div>
+          <div className="stat-card">
+            <span className="stat-number">{stats.totalCountries}</span>
+            <span className="stat-label">Países</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{stats.totalContinents}</span>
+            <span className="stat-label">Continentes</span>
+          </div>
+          {stats.averageRating && (
+            <div className="stat-card">
+              <span className="stat-number">★ {stats.averageRating}</span>
+              <span className="stat-label">Classificação média</span>
+            </div>
+          )}
+        </div>
+      </ScrollReveal>
 
-      <div className="stats-columns">
-        <section className="section">
-          <h2>Países visitados</h2>
+      <ScrollReveal delay={0.2}>
+        <div className="stats-columns">
+          <section className="section">
+            <h2>Países visitados</h2>
           <ul className="tag-list">
             {stats.countries.map((c) => (
               <li key={c}>
@@ -81,8 +85,9 @@ export default function Stats() {
                 </li>
               ))}
           </ul>
-        </section>
-      </div>
+          </section>
+        </div>
+      </ScrollReveal>
     </div>
   );
 }

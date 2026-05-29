@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import MapView from "../components/MapView";
+import AnimatedMap from "../components/animations/AnimatedMap";
+import ScrollReveal from "../components/animations/ScrollReveal";
 
 export default function MapPage() {
   const [destinations, setDestinations] = useState([]);
@@ -28,7 +30,31 @@ export default function MapPage() {
           Adiciona destinos para veres marcadores no mapa.
         </p>
       ) : (
-        <div className="map-layout">
+        <>
+          <ScrollReveal delay={0.1}>
+            <section className="section">
+              <h2>Rota animada dos teus destinos</h2>
+              <p style={{ marginBottom: '16px', color: '#666' }}>
+                Visualiza a sequência dos teus últimos destinos visitados com uma animação interativa.
+              </p>
+              <AnimatedMap
+                destinations={destinations.slice(0, 5).map((d, i) => ({
+                  id: d.id,
+                  label: d.city,
+                  x: 80 + i * 130,
+                  y: 130 + (i % 2) * 40,
+                }))}
+                paths={destinations.slice(0, 4).map((_, i) => {
+                  const x1 = 80 + i * 130;
+                  const y1 = 130 + (i % 2) * 40;
+                  const x2 = 80 + (i + 1) * 130;
+                  const y2 = 130 + ((i + 1) % 2) * 40;
+                  return `M ${x1},${y1} C ${(x1 + x2) / 2},${y1 - 20} ${(x1 + x2) / 2},${y2 + 20} ${x2},${y2}`;
+                })}
+              />
+            </section>
+          </ScrollReveal>
+          <div className="map-layout">
           <MapView
             destinations={destinations}
             onSelect={setSelected}
@@ -50,6 +76,7 @@ export default function MapPage() {
             </ul>
           </aside>
         </div>
+        </>
       )}
     </div>
   );

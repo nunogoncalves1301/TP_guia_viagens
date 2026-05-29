@@ -38,8 +38,8 @@ export default function Destinations() {
         </div>
       ) : (
         <div className="card-grid">
-          {destinations.map((d) => (
-            <DestinationCard key={d.id} destination={d} />
+          {destinations.map((d, i) => (
+            <DestinationCard key={d.id} destination={d} delay={i * 0.08} />
           ))}
         </div>
       )}
