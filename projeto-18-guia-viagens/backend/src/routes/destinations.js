@@ -19,9 +19,10 @@ async function getDestinationWithDetails(id, userId) {
   });
   if (!dest) return null;
 
-  const { user, photos, experiences, ...rest } = dest;
+  const { user, photos, experiences, visitDate, ...rest } = dest;
   return {
     ...rest,
+    visit_date: visitDate,
     author_name: user.name,
     photos,
     experiences,
@@ -38,8 +39,9 @@ router.get("/", async (req, res, next) => {
       },
     });
 
-    const data = rows.map(({ _count, ...d }) => ({
+    const data = rows.map(({ _count, visitDate, ...d }) => ({
       ...d,
+      visit_date: visitDate,
       photo_count: _count.photos,
       experience_count: _count.experiences,
     }));
@@ -86,7 +88,8 @@ router.post("/", async (req, res, next) => {
         longitude: longitude ?? null,
       },
     });
-    res.status(201).json({ data: created });
+    const { visitDate, ...createdRest } = created;
+    res.status(201).json({ data: { ...createdRest, visit_date: visitDate } });
   } catch (err) {
     next(err);
   }
@@ -125,7 +128,8 @@ router.put("/:id", async (req, res, next) => {
       },
     });
 
-    res.status(200).json({ data: updated });
+    const { visitDate, ...updatedRest } = updated;
+    res.status(200).json({ data: { ...updatedRest, visit_date: visitDate } });
   } catch (err) {
     next(err);
   }

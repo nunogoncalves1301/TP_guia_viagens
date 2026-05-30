@@ -73,8 +73,8 @@ router.get("/:id", async (req, res, next) => {
     res.status(200).json({
       data: {
         ...(() => {
-          const { user, ...rest } = dest;
-          return { ...rest, author_name: user.name };
+          const { user, visitDate, ...rest } = dest;
+          return { ...rest, visit_date: visitDate, author_name: user.name };
         })(),
       },
     });

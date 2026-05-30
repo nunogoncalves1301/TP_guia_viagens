@@ -6,6 +6,9 @@ const CITY_COORDS = {
   Madrid: [40.4168, -3.7038],
   Roma: [41.9028, 12.4964],
   Barcelona: [41.3851, 2.1734],
+  Palma_de_Mallorca: [39.5696, -2.6502],
+  Palma_de_Maiorca: [39.5696, -2.6502],
+  Palma: [39.5696, -2.6502],
   Berlim: [52.52, 13.405],
   Amesterdão: [52.3676, 4.9041],
   Nova_York: [40.7128, -74.006],
@@ -31,13 +34,43 @@ const COUNTRY_COORDS = {
   Tailândia: [15.9, 100.9],
 };
 
+function normalizeKey(value) {
+  if (!value) return "";
+  return value
+    .toString()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[-’'`]/g, "")
+    .replace(/\s+/g, "_")
+    .toLowerCase();
+}
+
+const NORMALIZED_CITY_COORDS = Object.fromEntries(
+  Object.entries(CITY_COORDS).map(([city, coords]) => [normalizeKey(city), coords])
+);
+
+const NORMALIZED_COUNTRY_COORDS = Object.fromEntries(
+  Object.entries(COUNTRY_COORDS).map(([country, coords]) => [normalizeKey(country), coords])
+);
+
 export function getCoords(destination) {
-  if (destination.latitude && destination.longitude) {
-    return [parseFloat(destination.latitude), parseFloat(destination.longitude)];
+  const hasLatitude = destination.latitude !== undefined && destination.latitude !== null && destination.latitude !== "";
+  const hasLongitude = destination.longitude !== undefined && destination.longitude !== null && destination.longitude !== "";
+
+  if (hasLatitude && hasLongitude) {
+    const lat = parseFloat(destination.latitude);
+    const lng = parseFloat(destination.longitude);
+    if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+      return [lat, lng];
+    }
   }
-  const cityKey = destination.city?.replace(/\s/g, "_");
-  if (CITY_COORDS[cityKey]) return CITY_COORDS[cityKey];
-  if (CITY_COORDS[destination.city]) return CITY_COORDS[destination.city];
-  if (COUNTRY_COORDS[destination.country]) return COUNTRY_COORDS[destination.country];
-  return [20, 0];
+
+  const cityKey = normalizeKey(destination.city);
+  if (cityKey && NORMALIZED_CITY_COORDS[cityKey]) return NORMALIZED_CITY_COORDS[cityKey];
+
+  const countryKey = normalizeKey(destination.country);
+  if (countryKey && NORMALIZED_COUNTRY_COORDS[countryKey]) return NORMALIZED_COUNTRY_COORDS[countryKey];
+
+  return null;
 }
