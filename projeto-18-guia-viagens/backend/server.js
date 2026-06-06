@@ -58,12 +58,9 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ message: "Erro interno do servidor" });
 });
 
-const PORT = process.env.SERVER_PORT || 4242;
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Servidor a correr em http://localhost:${PORT}`);
-  });
-}
+const PORT = process.env.SERVER_PORT || process.env.PORT || 4242;
+app.listen(PORT, () => {
+  console.log(`Servidor a correr na porta ${PORT}`);
+});
 
 module.exports = app;
