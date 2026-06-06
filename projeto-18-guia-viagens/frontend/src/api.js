@@ -55,6 +55,14 @@ export const api = {
   getStats: () => request("/stats"),
 };
 
+function getApiHost() {
+  const base = API_BASE.replace(/\/$/, "");
+  if (base.startsWith("http://") || base.startsWith("https://")) {
+    return base.replace(/\/api$/, "");
+  }
+  return base.replace(/\/api$/, "") || "";
+}
+
 export function photoUrl(filename) {
-  return `/uploads/${filename}`;
+  return `${getApiHost()}/uploads/${filename}`;
 }
