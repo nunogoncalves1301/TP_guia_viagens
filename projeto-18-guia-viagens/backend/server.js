@@ -29,7 +29,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-const uploadDir = path.resolve(process.env.UPLOAD_DIR || "uploads");
+const uploadDir = path.resolve(__dirname, process.env.UPLOAD_DIR || "uploads");
 app.use("/uploads", express.static(uploadDir));
 
 app.get("/", (_req, res) => {
