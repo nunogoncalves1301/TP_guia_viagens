@@ -10,4 +10,7 @@ export default defineConfig({
       "/uploads": "http://localhost:4242",
     },
   },
+  build: {
+    outDir: "dist",
+  },
 });
